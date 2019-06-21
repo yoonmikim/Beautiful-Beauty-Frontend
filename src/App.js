@@ -1,14 +1,15 @@
 import React, { Fragment } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import Navbar from './Navbar'
+import SortBar from './SortBar'
 import LoginForm from './LoginForm'
 import UserHeader from './UserHeader'
 import Container from './Container'
 import Cart from './Cart'
 import Card from './Card'
 
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 
 
 class App extends React.Component {
@@ -22,6 +23,7 @@ class App extends React.Component {
     cart: [],
     search: "",
     toggle: false,
+    clicked: false,
   }
 
   componentDidMount() {
@@ -40,6 +42,12 @@ class App extends React.Component {
       toggle: !this.state.toggle
     })
   }
+
+    clickLog = event => {
+      this.setState({
+        toggle: !this.state.clicked
+      })
+    }
 
   changeEvent = event => {
   this.setState({
@@ -68,9 +76,32 @@ class App extends React.Component {
       })
     }
 
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.preventDefault()
     this.setState({
       loggedin: !this.state.loggedin
+
+    })
+    this.props.history.push('/home')
+  }
+
+  sortByName = () => {
+    const alpha = [...this.state.products].sort((a,b) => (a.name > b.name) ? 1 : -1)
+    this.setState({
+      products: alpha
+    })
+  }
+
+  sortByBrand = () => {
+    const br = [...this.state.products].sort((a,b) => (a.brand > b.brand) ? 1 : -1)
+    this.setState({
+      products: br
+    })
+  }
+
+  defaultSort = () => {
+    this.setState({
+      products: [...this.state.products].sort((a, b) => (a.id > b.id) ? 1: -1)
     })
   }
 
@@ -78,6 +109,7 @@ class App extends React.Component {
 render() {
   // console.log(this.state.cart)
   // console.log(this.state.search)
+  // console.log(this.state.username)
 
   if (this.state.loading) {
       return (
@@ -91,8 +123,21 @@ render() {
   return (
 
     <div>
-  <Navbar toggle={this.state.toggle} toggleSearch={this.toggleSearch} changeEvent={this.changeEvent} search={this.state.search} />
+  <Navbar loggedin={this.state.loggedin} toggle={this.state.toggle} toggleSearch={this.toggleSearch} changeEvent={this.changeEvent} search={this.state.search} username={this.state.username} handleChange={this.handleChange} handleSubmit={this.handleSubmit}/>
+  <SortBar defaultSort={this.defaultSort} sortByName={this.sortByName} sortByBrand={this.sortByBrand} />
+
   <Switch>
+
+  <Route path="/login" render={(routerProps) => {
+    return <LoginForm
+      loggedin={this.state.loggedin}
+      clicked={this.state.clicked}
+      handleChange={this.handleChange}
+      handleSubmit={this.handleSubmit}
+      {...routerProps}
+      username={this.state.username}/>
+  }}/>
+
     <Route path="/cart" render={(routerProps) => {
       return <Cart
         removeFromCart={this.removeFromCart}
@@ -101,10 +146,10 @@ render() {
     }}/>
 
     <Route path="/home" render={(routerProps) => {
-      let allItems = []
+      let all = []
 
       this.state.products.forEach(product => {
-        allItems = [...allItems, product]
+        all = [...all, product]
       })
 
       return <Fragment>
@@ -115,8 +160,9 @@ render() {
       </Fragment>
 
     }}/>
-
+    <Route render={() => <Redirect to="/home"/>}/>
   </Switch>
+
 </div>
 
 
@@ -131,7 +177,7 @@ render() {
 
 }
 
-export default App;
+export default withRouter(App);
 
 
 //  <Router>

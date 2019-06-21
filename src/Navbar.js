@@ -1,11 +1,12 @@
 import React from 'react'
-// import SearchBar from './SearchBar'
-// import AccountControlModule from './AccountControlModule'
-import { Link, withRouter } from 'react-router-dom'
+import picture from './logo.gif';
+import { Link, Redirect, withRouter } from 'react-router-dom'
 import Search from './Search';
+import UserHeader from './UserHeader'
 
 class Navbar extends React.Component {
   render(){
+    console.log(this.props)
     return (
       <div className="navbar" >
           <Link to="/home">
@@ -17,11 +18,11 @@ class Navbar extends React.Component {
                 width="100"
                 height="100"
               /> 🌸 Welcome to Beautiful Beauty! 🌸
-              <img src="https://de13-engine.flamingtext.com/netfu/tmp28002/coollogo_com-4336131.gif" />
+              <img src="logo.gif" />
             </div>
           </Link>
 
-          <div className="account-controls" align="right" >
+          <div className="account" align="right" >
 
                   <button onClick={this.props.toggleSearch}>
                     <img className="button-icon" src="https://www.flaticon.com/premium-icon/icons/svg/954/954591.svg" alt="icon" width="50" height="50" /><br/>
@@ -33,10 +34,14 @@ class Navbar extends React.Component {
                     <br/>
                     Notifcations
                   </button>
-                  <button>
+                  <Link to="/login">
+                  <button onClick={this.props.clickLog}>
                     <img className="button-icon" src="https://image.flaticon.com/icons/svg/1029/1029183.svg" alt="icon" width="50" height="50" /><br/>
                     Account
+                    {this.props.loggedin ? <UserHeader loggedin={this.props.loggedin} username={this.props.username} handleChange={this.props.handleChange} handleSubmit={this.props.handleSubmit} /> : null }
+                    {/* this.props.loggedin ? <Redirect to="/home"/> : null */}
                   </button>
+                  </Link>
                   <Link to="/cart">
                   <button>
                   <img className="button-icon" src="https://image.flaticon.com/icons/svg/138/138252.svg" alt="icon" width="50" height="50" /><br/>
