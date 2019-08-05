@@ -1,5 +1,8 @@
 # Beautiful Beauty Frontend
 
+[](https://yoonmikim.github.io/images/beautiful_beauty.png)
+[](https://yoonmikim.github.io/images/cart.png)
+
 A Makeup App (Sephora-ish) where user can go to view products, toggle with login/filter/sort/search products based on user inputs. If user likes certain products, user can add to cart and/or go to product pages to purchase.
 
 + Created a Ruby on Rails API backend to parse data from a 3rd party API. (Seed data from a complex data set - external API)
